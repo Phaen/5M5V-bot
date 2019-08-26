@@ -1,7 +1,8 @@
-# VegAssist
-Twitter Bot that retweets people looking for support going vegan
+# 5M5V Bot
+Fork from plorry/VegAssist to retweet people looking for support going vegan for 5 Minutes 5 Vegans.
+https://5minutes5vegans.org
 
-VegAssist tracks usage of the term "vegan" on twitter's public stream, and processes each item, looking for exact matches on an array of preset phrases. If there's a match, the bot will retweet.
+This bot tracks usage of the term "vegan" on twitter's public stream, and processes each item, looking for exact matches on an array of preset phrases. If there's a match, the bot will retweet.
 
 ## Installing
 
