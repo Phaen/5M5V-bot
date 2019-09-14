@@ -1,14 +1,14 @@
 {
-  "name": "vegassist",
+  "name": "5m5v-bot",
   "version": "1.0.0",
-  "description": "",
-  "main": "vegassist.js",
+  "description": "Twitter Bot That Retweets People Who Are Considering Veganism",
+  "main": "bot.js",
   "dependencies": {
-    "pg": "^7.4.1",
-    "twit": "^2.1.0"
+    "pg": "^7.12.1",
+    "twit": "^2.2.11"
   },
   "devDependencies": {
-    "nodeunit": "^0.9.1"
+    "nodeunit": "^0.11.3"
   },
   "scripts": {
     "test": "nodeunit test"
