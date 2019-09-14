@@ -14,7 +14,7 @@ var DELAYTIME = 1000 * 60 * 2;
 var settingsFilteredTerms = settings.FILTERED_TERMS || [];
 var settingsFilters = settings.FILTERS || [];
 
-var filter = new TweetFilter('filters', settingsFilteredTerms, settingsFilters, handle);
+var filter = new TweetFilter('filters', settingsFilteredTerms, settingsFilters);
 // Whenever the Twitter stream notifies us of a new Tweet with the term 'vegan' (or its international equivalents), we handle it!
 var stream = T.stream('statuses/filter', { track: util.trackedTerms });
 // Run with option '--dry-run' to disable retweeting and instead log matches to console
