@@ -8,10 +8,10 @@
     "twit": "^2.2.11"
   },
   "devDependencies": {
-    "nodeunit": "^0.11.3"
+    "mocha": "^6.2.0"
   },
   "scripts": {
-    "test": "nodeunit test"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC"
