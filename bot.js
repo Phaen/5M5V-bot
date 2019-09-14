@@ -14,20 +14,6 @@ var DELAYTIME = 1000 * 60 * 2;
 var settingsFilteredTerms = settings.FILTERED_TERMS || [];
 var settingsFilters = settings.FILTERS || [];
 
-var handle = settings.HANDLE || "";
-if (handle.length > 0){
-	if (handle.indexOf('@') != 0)
-		handle = '@' + handle;
-	util.track(handle);
-}
-
-const client = new pg.Client({
-    user: settings.DATABASE['user'],
-    password: settings.DATABASE['password'],
-    database: settings.DATABASE['db_name']
-});
-client.connect();
-
 var filter = new TweetFilter('filters', settingsFilteredTerms, settingsFilters, handle);
 // Whenever the Twitter stream notifies us of a new Tweet with the term 'vegan' (or its international equivalents), we handle it!
 var stream = T.stream('statuses/filter', { track: util.trackedTerms });
@@ -42,20 +28,6 @@ fs.appendFile(logFile, "", function(err) {
 })
 
 console.log("Loaded filters: " + Object.keys(filter.filters).join(", "));
-
-// log tweets and their matches as json, each tweet/match will be a separate line of json
-var logMatches = function(tweet, matches) {
-    // flatten match objects a bit
-    // matches = matches.map(function(match){
-    //    return {match: match[0], index: match.index, filter: match.filter.toString(), filterList: match.filterList };
-    //})
-    // provide an empty callback to swallow errors
-    // fs.appendFile(logFile, JSON.stringify({ tweet: tweet, matches: matches }) + "\n", function(){});
-
-    client.query('INSERT INTO retweet(tweet_id, text, time, username, user_follower_count) VALUES($1, $2, $3, $4, $5)', [tweet.id, tweet.text, tweet.created_at, tweet.user.followers_count], function(){
-        client.query('COMMIT');
-    });
-}
 
 console.log("Tracking terms: " + util.trackedTerms.join(", "));
 
