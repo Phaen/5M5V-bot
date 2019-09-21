@@ -8,8 +8,8 @@ This bot tracks usage of the term "vegan" on twitter's public stream, and proces
 
 1. Clone this repository
 2. Install [node.js and npm](https://nodejs.org)
-3. Run `npm install` in the directory that you cloned this repository into
-4. Copy the `config.example.yarn` and fill in your credentials
+3. Run `yarn install` in the directory that you cloned this repository into
+4. Copy the `config.example.yaml` and fill in your credentials
 5. Run `node .`
 
 ## Running the tests
