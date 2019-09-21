@@ -13,6 +13,9 @@
   "scripts": {
     "test": "mocha"
   },
-  "author": "",
+  "bin": {
+    "5m5v-bot": "bot.js"
+  }
+  "author": "Pablo Kebees",
   "license": "ISC"
 }
