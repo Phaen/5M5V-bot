@@ -7,7 +7,7 @@ var request = require('request')
 
 // loead the config or bust
 try {
-    var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'))
+    var config = yaml.safeLoad(fs.readFileSync('5m5v-config.yaml', 'utf8'))
 } catch(e) {
     throw 'Unable to load config file: ' + e
 }

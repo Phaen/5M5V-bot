@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "bin": {
-    "5m5v-bot": "bot.js"
+    "5m5v-bot": "5m5v-bot.js"
   },
   "author": "Pablo Kebees",
   "license": "ISC"
