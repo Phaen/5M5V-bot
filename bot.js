@@ -84,7 +84,7 @@ function setupStream() {
     var T = users[0]
 
     // setup the filters
-    var filter = new TweetFilter('filters', config.exclude, Object.keys(filterUsers))
+    var filter = new TweetFilter(config.exclude, Object.keys(filterUsers))
 
     // Whenever the Twitter stream notifies us of a new Tweet with the term 'vegan' (or its international equivalents), we handle it!
     var stream = T.stream('statuses/filter', { track: util.trackedTerms })
