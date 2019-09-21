@@ -24,6 +24,8 @@ Visit https://developer.twitter.com/apps to register your own app and obtain the
 
 ## Configuration
 
+The configuration is loaded from `5m5v-config.yaml` in the working directory, which is likely either the directory of your cloned repository or the directory of your project where you installed the node package. The configuration format is YAML, with its options listed below.
+
 #### `consumer_key`
 You find this in your app on Twitter under "Keys and tokens" -> "Consumer API keys". It's listed as "API key".
 #### `consumer_secret`
