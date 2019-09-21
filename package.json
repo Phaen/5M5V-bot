@@ -1,6 +1,6 @@
 {
   "name": "5m5v-bot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Twitter Bot That Retweets People Who Are Considering Veganism",
   "main": "bot.js",
   "dependencies": {
