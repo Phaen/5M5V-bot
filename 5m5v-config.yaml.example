@@ -5,5 +5,3 @@ users:
       access_token_secret: Aa1Bb2Cc3Dd4Ee5Ff6Gg7Hh8Ii9Jj0Kk1Ll2Mm3Nn4Oo5
       filters:
           - english
-exclude:
-delaytime: 120000
