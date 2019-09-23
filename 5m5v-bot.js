@@ -73,11 +73,11 @@ function setupStream() {
     var filterUsers = {}
     for(let i = 0; i < config.users.length; i++)
         for(let j in config.users[i].filters) {
-            let filter = config.users[i].filters[j]
-            if(filter in filterUsers)
-                filterUsers[filter].push(i)
+            let filterName = config.users[i].filters[j]
+            if(filterName in filterUsers)
+                filterUsers[filterName].push(i)
             else
-                filterUsers[filter] = [i]
+                filterUsers[filterName] = [i]
         }
 
     // use first user to stream with
@@ -106,24 +106,25 @@ function setupStream() {
         console.log("Reconnecting...")
     })
     stream.on('tweet', function(tweet) {
-        var filters = filter.matches(tweet)
-        if (filters.length) {
+
+        var filterNames = filter.matches(tweet)
+        if (filterNames.length) {
 
             if (isDryRun) {
                 console.log(tweet.id_str + ' : ' + tweet.user.screen_name + ' : ' + tweet.text)
                 return
             }
             
-            console.log(`Retweeted: ${tweet.id_str} to ${filters.join(', ')} users`)
+            console.log(`Retweeted: ${tweet.id_str} to ${filterNames.join(', ')} users`)
 
-            for( let i in filters ) {
-                filter = filters[i]
-                for( var j in filterUsers[filter] ) {
-                    user = filterUsers[filter][j]
+            for( let i in filterNames ) {
+                filterName = filterNames[i]
+                for( var j in filterUsers[filterName] ) {
+                    let user = filterUsers[filterName][j]
                     setTimeout(function(){
                         users[user].post('statuses/retweet/:id', {id: tweet.id_str}, function(err, data, response) {
                             if (err) {
-                                console.log(err)
+                                console.error('Twitter error: ' + err.message)
                                 return false
                             }
                         });
