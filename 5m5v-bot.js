@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var Twitter = require('twit')
 var TweetFilter = require('./lib/filter')
 var util = require('./lib/util')
