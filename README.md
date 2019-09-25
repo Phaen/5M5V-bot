@@ -12,15 +12,17 @@ Visit https://developer.twitter.com/apps to register your own app and obtain the
 ## Installing
 
 ### Yarn
-1. Run `yarn add 5m5v-bot` to install the bot to your environment
-2. Copy the `5m5v-config.example.yaml` file in `node_modules/5m5v-bot` into your own environment under `5m5v-config.yaml` and configure the bot
-2. Run `npx 5m5v-bot` to run the bot
+1. Run `yarn add 5m5v-bot` to install the bot to your project
+2. Copy the `5m5v-config.example.yaml` file in `node_modules/5m5v-bot` into your own project under `5m5v-config.yaml` and configure the bot
+2. Run `npx 5m5v-bot` in the directory of your project to run the bot
+
+*You can install the bot globally to your system with `yarn global add 5m5v-bot` instead. From then you can run `npx 5m5v-bot` from any folder, as long as it contains a config file.*
 
 ### Manual
 1. Clone this repository
 2. Run `yarn install` in the directory that you cloned this repository into
 3. Copy the `5m5v-config.example.yaml` file to your own `5m5v-config.yaml` and configure the bot
-4. Run `node .` to run the bot
+4. Run `node .` in the directory of the repository to run the bot
 
 ## Configuration
 
