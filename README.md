@@ -2,7 +2,7 @@
 Fork from [plorry/VegAssist](https://github.com/plorry/VegAssist) to retweet people looking for support going vegan for 5 Minutes 5 Vegans.
 https://5minutes5vegans.org
 
-This bot tracks usage of the term "vegan" - and it's translated variants depending on the config - on Twitter's public stream, and processes each item, looking for exact matches on an array of preset phrases. This bot can be setup for multiple authorised accounts for the same app, retweeting messages matching only certain filters to only certain accounts.
+This bot tracks usage of the term "vegan" - and its translated variants depending on the config - on Twitter's public stream, and processes each item, looking for exact matches on an array of preset phrases. This bot can be setup for multiple authorised accounts for the same app, retweeting messages matching only certain filters to only certain accounts.
 
 Implements full verification of all supplied API credentials, to avoid potential headaches.
 
