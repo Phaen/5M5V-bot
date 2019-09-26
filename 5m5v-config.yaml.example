@@ -1,7 +1,7 @@
-consumer_key: Aa1Bb2Cc3Dd4Ee5Ff6Gg7Hh8I
-consumer_secret: Aa1Bb2Cc3Dd4Ee5Ff6Gg7Hh8Ii9Jj0Kk1Ll2Mm3Nn4Oo5Pp6Qq
+consumer_key: Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0A
+consumer_secret: Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa
 users:
-    - access_token: 1234567890123456789-Aa1Bb2Cc3Dd4Ee5Ff6Gg7Hh8Ii9Jj0
-      access_token_secret: Aa1Bb2Cc3Dd4Ee5Ff6Gg7Hh8Ii9Jj0Kk1Ll2Mm3Nn4Oo5
+    - access_token: 0000000000000000000-Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0
+      access_token_secret: Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0Aa0
       filters:
           - english

@@ -2,7 +2,7 @@
 Fork from [plorry/VegAssist](https://github.com/plorry/VegAssist) to retweet people looking for support going vegan for 5 Minutes 5 Vegans.
 https://5minutes5vegans.org
 
-This bot tracks usage of the term "vegan" - and it's translated variants depending on the config - on Twitter's public stream, and processes each item, looking for exact matches on an array of preset phrases. This bot can be setup for multiple authorised accounts for the same app, retweeting messages matching only certain filters to only certain accounts.
+This bot tracks usage of the term "vegan" - and its translated variants depending on the config - on Twitter's public stream, and processes each item, looking for exact matches on an array of preset phrases. This bot can be setup for multiple authorised accounts for the same app, retweeting messages matching only certain filters to only certain accounts.
 
 Implements full verification of all supplied API credentials, to avoid potential headaches.
 
@@ -12,15 +12,17 @@ Visit https://developer.twitter.com/apps to register your own app and obtain the
 ## Installing
 
 ### Yarn
-1. Run `yarn add 5m5v-bot` to install the bot to your environment
-2. Copy the `5m5v-config.example.yaml` file in `node_modules/5m5v-bot` into your own environment under `5m5v-config.yaml` and configure the bot
-2. Run `npx 5m5v-bot` to run the bot
+1. Run `yarn add 5m5v-bot` to install the bot to your project
+2. Copy the `5m5v-config.example.yaml` file in `node_modules/5m5v-bot` into your own project under `5m5v-config.yaml` and configure the bot
+2. Run `yarn 5m5v-bot` in the directory of your project to run the bot
+
+*You can install the bot globally to your system with `yarn global add 5m5v-bot` instead. From then you can run `yarn 5m5v-bot` from any folder, as long as it contains a config file.*
 
 ### Manual
 1. Clone this repository
 2. Run `yarn install` in the directory that you cloned this repository into
 3. Copy the `5m5v-config.example.yaml` file to your own `5m5v-config.yaml` and configure the bot
-4. Run `node .` to run the bot
+4. Run `node .` in the directory of the repository to run the bot
 
 ## Configuration
 
