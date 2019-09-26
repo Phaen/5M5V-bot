@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "post-install": "cp 5m5v-config.yaml.example $INIT_CWD/5m5v-config.yaml",
+    "post-install": "cp 5m5v-config.yaml.example $INIT_CWD/5m5v-config.yaml"
   },
   "bin": {
     "5m5v-bot": "bin/5m5v-bot.js"
