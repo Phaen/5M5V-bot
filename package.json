@@ -1,6 +1,6 @@
 {
   "name": "5m5v-bot",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Twitter Bot That Retweets People Who Are Considering Veganism",
   "main": "5m5v-bot.js",
   "dependencies": {
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "postinstall": "cp 5m5v-config.yaml.example $INIT_CWD/5m5v-config.yaml"
+    "postinstall": "cp 5m5v-config.yaml.example $INIT_CWD"
   },
   "bin": {
     "5m5v-bot": "bin/5m5v-bot.js"
