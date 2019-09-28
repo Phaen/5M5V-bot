@@ -4,15 +4,19 @@ var track = util.track;
 
 track("vegan");
 
+var adverbs = [
+    ' liebend', ' auch', ' schon', ' manchmal', ' oft', ' eigentlich', 'voll'
+];
+var adverbsRegexSet = adverbs.join('|');
+
 module.exports = [
-    regex ( "ich (will|möchte|sollte) mich vegan ernähren" ),
-    regex ( "ich (will|möchte)( endlich| auch| gerne| bald)? vegan (werden|sein|leben|essen)" ),
-    regex ( "ich (will|möchte) wieder vegan (sein|werden|leben|essen)" ),
-    regex ( "ich überlege( auch)? vegan zu werden" ),
-    regex ( "ich wäre( liebend)? gerne vegan" ),
-    regex ( "ich würde( ja)? gerne vegan (werden|sein|leben|essen)" ),
-    regex ( "ich hab voll bock vegan zu werden" ),
-    regex ( "ich versuche( jetzt)? auch vegan zu werden" ),
-    regex ( "ich versuche( auch)? gerade vegan zu werden" ),
-    regex ( "ich würde mich( eigentlich)? gerne vegan ernähren" )
+    regex ("(will|möchte|sollte) mich vegan ernähren"),
+    regex ("(will|möchte)( endlich| auch| gerne| bald)? vegan (werden|sein|leben|essen)"),
+    regex ("(will|möchte) wieder vegan (sein|werden|leben|essen)"),
+    regex ("überlege(" + adverbsRegexSet + ")? vegan zu werden"),
+    regex ("wäre(" + adverbsRegexSet + ")? gerne vegan"),
+    regex ("würde( ja)?(" + adverbsRegexSet + ") gerne vegan (werden|sein|leben|essen)"),
+    regex ("hab(" + adverbsRegexSet + ") bock vegan zu werden"),
+    regex ("versuche( " + adverbsRegexSet + ")?( gerade)? vegan zu werden"),
+    regex ("würde mich( " + adverbsRegexSet + ")? gerne vegan ernähren")
 ]
