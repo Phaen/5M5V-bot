@@ -17,7 +17,7 @@ var recidivismAdjectives = [
 var recidivismAdjectivesRegexSet = recidivismAdjectives.join('|');
 
 var verbsPres = [ 'going', 'becoming( a)?', 'being( a)?', 'staying( a)?' ];
-var verbsPresRegexSet = verbs.join('|');
+var verbsPresRegexSet = verbsPres.join('|');
 
 var verbs = [ 'be( a)?', 'become( a)?', 'go', 'turn', '(try|consider) ' + verbsPresRegexSet ];
 var verbsRegexSet = verbs.join('|');
@@ -40,7 +40,7 @@ module.exports = [
     // can picture going vegan
     regex( "i (can|could) ((" + adverbsRegexSet + ") )?(see|picture|imagine)( myself| me)? (" + verbsPresRegexSet + ") #?vegan"),
     // stemming recidivism
-    regex( "i('| a)?m (having a (" + recidivismAdjectivesRegexSet + ") time (to stay|staying|being) #?vegan"),
+    regex( "i('| a)?m having a (" + recidivismAdjectivesRegexSet + ") time (to stay|staying|being) #?vegan"),
     regex( "don'?t know how much longer i( can| will|'ll) (stay|be) #?vegan")
 
 ]
