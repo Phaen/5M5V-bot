@@ -1,6 +1,6 @@
 var shared = require('./lib/shared');
 var TweetFilter = require('../lib/filter')
-var filter = new TweetFilter(TweetFilter.getFiltersFromFiles("filters/italian"))
+var filter = new TweetFilter([], ["italian"])
 
 var matches = [
     "voglio diventare un vegano",

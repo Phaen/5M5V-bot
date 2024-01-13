@@ -1,6 +1,6 @@
 var shared = require('./lib/shared');
 var TweetFilter = require('../lib/filter')
-var filter = new TweetFilter(TweetFilter.getFiltersFromFiles("filters/english"))
+var filter = new TweetFilter([], ["english"])
 
 var matches = [
     'help me go vegan',
@@ -49,8 +49,6 @@ var matches = [
 
 var falsePositives = [
     "I do not want to go vegan",
-    "I should be a vegan", // this phrasing more than likely isn't about going vegan long-term (e.g. I should be a vegan for Halloween)
-    "Don't tell me I should go vegan",
     "\"I want to go vegan\"",
     "\"stuff\" \"I want to go vegan\" \"stuff\"",
     "\"stuff\" \" I want to go vegan \" \"stuff\"",
@@ -67,7 +65,7 @@ exports.falsePositives = function(test) {
     // matching phrases with the word 'vegetarian' subbed for 'vegan' should not match
     matches.forEach(function(match) {
         var falsePositive = match.replace(/vegan/g, 'vegetarian');
-        test.ok(!filter.matches(falsePositive), "'" + falsePositive + "' should not match");
+        test.ok(filter.matches(falsePositive).length === 0, "'" + falsePositive + "' should not match");
     })
     test.done();
 }

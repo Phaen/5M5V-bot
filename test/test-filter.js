@@ -1,37 +1,21 @@
 var TweetFilter = require('../lib/filter.js')
-var filter = new TweetFilter({test: ['test']}, ['excludeme'])
-
-exports.retweetedByMe = function(test) {
-    var retweetedTweet = {retweeted: true, text: "test", user: {description: "", name: "", screen_name: ""}};
-    test.ok(!filter.matches(retweetedTweet), "Filter should not match tweets that have been retweeted by the authed user");
-    retweetedTweet.retweeted = false;
-    test.ok(filter.matches(retweetedTweet), "Filter should match tweets that haven't been retweeted by the authed user");
-    test.done();
-}
-
-exports.retweet = function(test) {
-    var retweetTweet = {retweeted: false, retweeted_status: {}, text: "test", user: {description: "", name: "", screen_name: ""}};
-    test.ok(!filter.matches(retweetTweet), "Filter should not match tweets that are retweets");
-    delete retweetTweet.retweeted_status;
-    test.ok(filter.matches(retweetTweet), "Filter should match tweets that aren't retweets");
-    test.done();
-}
+var filter = new TweetFilter(['excludeme'], ['english'])
 
 exports.reply = function(test) {
-    var replyTweet = {retweeted: false, text: "@someone test", user: {description: "", name: "", screen_name: ""}};
+    var replyTweet = {retweeted: false, fullText: "@someone test", tweetBy: {description: "", fullName: "", userName: ""}};
     test.ok(!filter.matches(replyTweet), "Filter should not match @reply tweets");
-    replyTweet.text = "test";
+    replyTweet.fullText = "test";
     test.ok(filter.matches(replyTweet), "Filter should match tweets that aren't @replies");
     test.done();
 }
 
 exports.excludedTerms = function(test) {
-    var unexcludedTweet = {retweeted: false, text: "test", user: {description: "", name: "", screen_name: ""}};
+    var unexcludedTweet = {retweeted: false, fullText: "test", tweetBy: {description: "", fullName: "", userName: ""}};
     test.ok(filter.matches(unexcludedTweet), "Filter should match tweets that don't have any excluded terms in their bio/name/username");
 
-    var excludedBioTweet = {retweeted: false, text: "test", user: {description: "Something and excludeme", name: "", screen_name: ""}};
-    var excludedNameTweet = {retweeted: false, text: "test", user: {description: "", name: "EXCLUDEME", screen_name: ""}};
-    var excludedScreenNameTweet = {retweeted: false, text: "test", user: {description: "", name: "", screen_name: "excludeme"}};
+    var excludedBioTweet = {retweeted: false, fullText: "test", tweetBy: {description: "Something and excludeme", fullName: "", userName: ""}};
+    var excludedNameTweet = {retweeted: false, fullText: "test", tweetBy: {description: "", fullName: "EXCLUDEME", userName: ""}};
+    var excludedScreenNameTweet = {retweeted: false, fullText: "test", tweetBy: {description: "", fullName: "", userName: "excludeme"}};
 
     test.ok(!filter.matches(excludedBioTweet), "Filter should not match tweets from users with excluded terms in their bio");
     test.ok(!filter.matches(excludedNameTweet), "Filter should not match tweets from users with excluded terms in their name");

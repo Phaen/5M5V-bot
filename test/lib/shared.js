@@ -6,6 +6,6 @@ exports.testMatches = function(test, matches, filter) {
 
 exports.testFalsePositives = function(test, falsePositives, filter) {
     falsePositives.forEach(function(falsePositive) {
-        test.ok(!filter.matches(falsePositive), "'" + falsePositive + "' should not match");
+        test.ok(filter.matches(falsePositive).length === 0, "'" + falsePositive + "' should not match");
     })
 }
