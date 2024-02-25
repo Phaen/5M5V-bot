@@ -105,6 +105,18 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
+"@jeto314/rettiwt-api@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@jeto314/rettiwt-api/-/rettiwt-api-1.0.0.tgz#bff3544713df4a5f1e4190ee7c8545ff80b81791"
+  integrity sha512-8efcjpB+wBXdOrWcBdz/m58LTYC8JQ5PQqPMGEoQ1z2CGNmr6YUP/+as8cauPHd131CdtIROzOtwhkg46mytNQ==
+  dependencies:
+    axios "1.6.3"
+    class-validator "0.14.1"
+    commander "11.1.0"
+    https-proxy-agent "7.0.2"
+    rettiwt-auth "2.1.0"
+    rettiwt-core "3.4.0-alpha.2"
+
 "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz#7e02e6eb5df901aaedb08514203b096614024098"
@@ -137,10 +149,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@types/validator@^13.7.10":
-  version "13.11.7"
-  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.11.7.tgz#99e19760297667ae46b7069ec8b96cbfe0a08b98"
-  integrity sha512-q0JomTsJ2I5Mv7dhHhQLGjMvX0JJm5dyZ1DXQySIUzU1UlwzB8bt+R6+LODUbz0UDIOvEzGc28tk27gBJw2N8Q==
+"@types/validator@^13.11.8":
+  version "13.11.9"
+  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.11.9.tgz#adfe96520b437a0eaa798a475877bf2f75ee402d"
+  integrity sha512-FCTsikRozryfayPuiI46QzH3fnrOoctTjvOYZkho9BTFLCOZ2rgZJHMOVgCOfttjPJcgOx52EpkY0CMfy87MIw==
 
 agent-base@^7.0.2:
   version "7.1.0"
@@ -227,19 +239,10 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
   integrity sha512-ReZxvNHIOv88FlT7rxcXIIC0fPt4KZqZbOlivyWtXLt8ESx84zd3kMC6iK5jVeS2qt+g7ftS7ye4fi06X5rtRQ==
 
-axios@1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.3.2.tgz#7ac517f0fa3ec46e0e636223fd973713a09c72b3"
-  integrity sha512-1M3O703bYqYuPhbHeya5bnhpYVsDDRyQSabNja04mZtboLNSuZ4YrltestrLXfHgmzua4TpUqRiVKbiQuo2epw==
-  dependencies:
-    follow-redirects "^1.15.0"
-    form-data "^4.0.0"
-    proxy-from-env "^1.1.0"
-
-axios@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.4.0.tgz#38a7bf1224cd308de271146038b551d725f0be1f"
-  integrity sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==
+axios@1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.3.tgz#7f50f23b3aa246eff43c54834272346c396613f4"
+  integrity sha512-fWyNdeawGam70jXSVlKl+SUNVcL6j6W79CuSIPfi6HnDUmSCH6gyUys/HrqHeA/wU0Az41rRgean494d0Jb+ww==
   dependencies:
     follow-redirects "^1.15.0"
     form-data "^4.0.0"
@@ -314,14 +317,14 @@ chalk@^2.4.2:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-class-validator@0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.14.0.tgz#40ed0ecf3c83b2a8a6a320f4edb607be0f0df159"
-  integrity sha512-ct3ltplN8I9fOwUd8GrP8UQixwff129BkEtuWDKL5W45cQuLd19xqmTLu5ge78YDm/fdje6FMt0hGOhl0lii3A==
+class-validator@0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.14.1.tgz#ff2411ed8134e9d76acfeb14872884448be98110"
+  integrity sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==
   dependencies:
-    "@types/validator" "^13.7.10"
-    libphonenumber-js "^1.10.14"
-    validator "^13.7.0"
+    "@types/validator" "^13.11.8"
+    libphonenumber-js "^1.10.53"
+    validator "^13.9.0"
 
 clean-yaml-object@^0.1.0:
   version "0.1.0"
@@ -593,7 +596,7 @@ forever-agent@~0.6.1:
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
-form-data@^4.0.0:
+form-data@4.0.0, form-data@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
   integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
@@ -902,10 +905,10 @@ lcov-parse@^1.0.0:
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-1.0.0.tgz#eb0d46b54111ebc561acb4c408ef9363bdc8f7e0"
   integrity sha512-aprLII/vPzuQvYZnDRU78Fns9I2Ag3gi4Ipga/hxnVMCZC8DnR2nI7XBqrPoywGfxqIx/DgarGvDJZAD3YBTgQ==
 
-libphonenumber-js@^1.10.14:
-  version "1.10.53"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.53.tgz#8dbfe1355ef1a3d8e13b8d92849f7db7ebddc98f"
-  integrity sha512-sDTnnqlWK4vH4AlDQuswz3n4Hx7bIQWTpIcScJX+Sp7St3LXHmfiax/ZFfyYxHmkdCvydOLSuvtAO/XpXiSySw==
+libphonenumber-js@^1.10.53:
+  version "1.10.57"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.57.tgz#4a8174014c758b8ffd865e06a43c3885706f7a9c"
+  integrity sha512-OjsEd9y4LgcX+Ig09SbxWqcGESxliDDFNVepFhB9KEsQZTrnk3UdEU+cO0sW1APvLprHstQpS23OQpZ3bwxy6Q==
 
 load-json-file@^4.0.0:
   version "4.0.0"
@@ -1315,32 +1318,24 @@ resolve@^1.10.0:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
-rettiwt-api@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/rettiwt-api/-/rettiwt-api-2.4.2.tgz#1cd35a87cc6943987515c2420bbe0c514e618713"
-  integrity sha512-78uvyYzyg5LTj6EAj66D9+Pyu3YAEyjv3tF6W7hZPbyvR5GXRePBlVm0fA06p0zh2bKu8eeAowAiQmanoIfl/g==
+rettiwt-auth@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.1.0.tgz#43fedd40cab5b775b92a1bef740d7b2a36553463"
+  integrity sha512-N3G1kX/4TFYvUumxcACHO9ngVnhM+DhpuRn2/JxWlgHuztAQShbO9ux3hfMducCqzzjdcMLPJhrEDt9fwSbpaQ==
   dependencies:
-    axios "1.3.2"
-    commander "11.1.0"
-    https-proxy-agent "7.0.2"
-    rettiwt-auth "2.0.0"
-    rettiwt-core "3.2.1"
-
-rettiwt-auth@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.0.0.tgz#e5eaa0cdb736acc52f9c1b6b31dae685f4d14073"
-  integrity sha512-zVEhc4Ce/5G6Rt53/nwCBnjgohmIBT+F7XMjgl0XjngwXFvUptSY5jISGzN6655teZBva92wAeupIkoSd0pxJg==
-  dependencies:
-    axios "1.4.0"
+    axios "1.6.3"
     commander "11.1.0"
     cookiejar "2.1.4"
+    https-proxy-agent "7.0.2"
 
-rettiwt-core@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.2.1.tgz#de8015eff45ba1bf591360716956916a385e4782"
-  integrity sha512-cLkv+8/e48nxsHuplj2M8z/854jSihNm0DPK9V+xxeqdIz4vd/5fmdmfqe7Gl04sVENzC/w8MFGBU6Z8glXqvw==
+rettiwt-core@3.4.0-alpha.2:
+  version "3.4.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.4.0-alpha.2.tgz#d3033d0db7a05f503e3b0aef5981d33897f0d08b"
+  integrity sha512-775cDTPWZXhY+znEOsjupIgj/Mmi8shKhLveShm1KnXEX1Qc5SjTEnpQv1dHmDaxiV9n6BIQ73E7K9AucBl+Mg==
   dependencies:
-    class-validator "0.14.0"
+    axios "1.6.3"
+    class-validator "0.14.1"
+    form-data "4.0.0"
 
 rimraf@^2.6.2, rimraf@^2.6.3:
   version "2.7.1"
@@ -1695,7 +1690,7 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-validator@^13.7.0:
+validator@^13.9.0:
   version "13.11.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-13.11.0.tgz#23ab3fd59290c61248364eabf4067f04955fbb1b"
   integrity sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==
