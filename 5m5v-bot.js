@@ -14,7 +14,8 @@ try {
 }
 
 const languages = config.users.map(user => user.language);
-const retweetDelay = config.delaytime || 2 * 60 * 1000;
+const pollingIntervalMs = 40 * 1000;
+const retweetDelayMs = config.delaytime || 2 * 60 * 1000;
 const isDryRun = process.argv[2] === '--dry-run';
 
 const tweetFilter = new TweetFilter(config.exclude, languages);
@@ -23,11 +24,11 @@ const rettiwt = new Rettiwt({ apiKey: config.users[0].api_key });
 console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
 
 (async () => {
-  for await (const tweet of rettiwt.tweet.stream({ includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')] }, 40 * 1000)) {
+  for await (const tweet of rettiwt.tweet.stream({ includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')] }, pollingIntervalMs)) {
     const matchingLanguages = tweetFilter.matches(tweet) || [];
 
     for (const language of matchingLanguages) {
-      await new Promise(resolve => setTimeout(resolve, retweetDelay));
+      await new Promise(resolve => setTimeout(resolve, retweetDelayMs));
 
       try {
         if (!isDryRun) {
