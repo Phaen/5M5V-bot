@@ -35,7 +35,7 @@ console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new 
           const apiKey = config.users.find(user => user.language === language)?.api_key ?? null;
           const rettiwt = new Rettiwt({ apiKey });
 
-          await rettiwt.tweet.retweet(tweet.id)
+          await rettiwt.tweet.retweet(tweet.id);
         }
 
         console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
