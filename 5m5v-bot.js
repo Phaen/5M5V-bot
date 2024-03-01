@@ -1,140 +1,47 @@
 #!/usr/bin/env node
 
-var Twitter = require('twit')
-var TweetFilter = require('./lib/filter')
-var util = require('./lib/util')
-var fs = require('fs')
-var yaml = require('js-yaml')
-var request = require('request')
+const fs = require('fs');
+const yaml = require('js-yaml');
+const { Rettiwt } = require('@jeto314/rettiwt-api');
+const TweetFilter = require('./lib/filter');
+const util = require('./lib/util');
 
-// loead the config or bust
+let config = {};
 try {
-    var config = yaml.safeLoad(fs.readFileSync('5m5v-config.yaml', 'utf8'))
-} catch(e) {
-    throw 'Unable to load config file: ' + e
+  config = yaml.safeLoad(fs.readFileSync('5m5v-config.yaml', 'utf8'));
+} catch (error) {
+  throw `Unable to load config file: ${error.message}`;
 }
 
-// fail if there are no users
-if(!config.users.length)
-    throw 'Config needs to contain at least one user'
+const languages = config.users.map(user => user.language);
+const pollingIntervalMs = 40 * 1000;
+const retweetDelayMs = config.delaytime || 2 * 60 * 1000;
+const isDryRun = process.argv[2] === '--dry-run';
 
-DELAYTIME = config.delaytime || 2 * 60 * 1000
+const tweetFilter = new TweetFilter(config.exclude, languages);
+const rettiwt = new Rettiwt({ apiKey: config.users[0].api_key });
 
-var users = []
+console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
 
-// verify that consumer keys are correct
-request.post( {
-        url: 'https://api.twitter.com/oauth2/token',
-        headers: { 'Authorization': 'Basic ' + Buffer.from(config.consumer_key + ':'  + config.consumer_secret).toString('base64') },
-        form: { 'grant_type': 'client_credentials'}
-    }, ( err, res, body ) => {
-        if(err)
-            throw err
+(async () => {
+  for await (const tweet of rettiwt.tweet.stream({ includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')] }, pollingIntervalMs)) {
+    const matchingLanguages = tweetFilter.matches(tweet) || [];
 
-        if(res.statusCode==200)
-            setupUsers()
-        else
-            throw 'Unable to verify consumer API keys: ' + JSON.parse(body).errors[0].message
-});
+    for (const language of matchingLanguages) {
+      await new Promise(resolve => setTimeout(resolve, retweetDelayMs));
 
-function setupUsers() {
+      try {
+        if (!isDryRun) {
+          const apiKey = config.users.find(user => user.language === language)?.api_key ?? null;
+          const rettiwt = new Rettiwt({ apiKey });
 
-    // create Twitter instances for all users
-    for(let i = 0; i < config.users.length; i++)
-        users.push(new Twitter({
-            consumer_key: config.consumer_key,
-            consumer_secret: config.consumer_secret,
-            access_token: config.users[i].access_token,
-            access_token_secret: config.users[i].access_token_secret,
-        }))
-
-    // verify that all user credentials are correct
-    var userErrors = 0
-    var promises = []
-    for( let i in users )
-        promises.push( users[i].get('account/verify_credentials').catch(e => {
-            var user = i
-            console.error(`Unable to verify user ${user}: ${e}`) 
-            userErrors ++
-        }))
-
-    Promise.all(promises).then(() => {
-        
-        if( userErrors )
-            console.error('Not all users were verified, terminating')
-        else
-            setupStream()
-    
-    })
-
-}
-
-function setupStream() {
-    
-    // many-to-one map of users using each filter
-    var filterUsers = {}
-    for(let i = 0; i < config.users.length; i++)
-        for(let j in config.users[i].filters) {
-            let filterName = config.users[i].filters[j]
-            if(filterName in filterUsers)
-                filterUsers[filterName].push(i)
-            else
-                filterUsers[filterName] = [i]
+          await rettiwt.tweet.retweet(tweet.id);
         }
 
-    // use first user to stream with
-    var T = users[0]
-
-    // setup the filters
-    var filter = new TweetFilter(config.exclude, Object.keys(filterUsers))
-
-    // Whenever the Twitter stream notifies us of a new Tweet with the term 'vegan' (or its international equivalents), we handle it!
-    var stream = T.stream('statuses/filter', { track: util.trackedTerms })
-
-    // Run with option '--dry-run' to disable retweeting and instead log matches to console
-    var isDryRun = process.argv[2] === '--dry-run'
-
-    console.log("Loaded filters: " + Object.keys(filter.filters).join(", "))
-
-    console.log("Tracking terms: " + util.trackedTerms.join(", "))
-
-    stream.on('connect', function (response) {
-        console.log("Connecting to Twitter..." + (isDryRun ? " (dry run, will not retweet matches)" : ""))
-    })
-    stream.on('connected', function (response) {
-        console.log("Connected")
-    })
-    stream.on('reconnect', function (response) {
-        console.log("Reconnecting...")
-    })
-    stream.on('tweet', function(tweet) {
-
-        var filterNames = filter.matches(tweet)
-        if (filterNames.length) {
-
-            if (isDryRun) {
-                console.log(tweet.id_str + ' : ' + tweet.user.screen_name + ' : ' + tweet.text)
-                return
-            }
-            
-            console.log(`Retweeted: ${tweet.id_str} to ${filterNames.join(', ')} users`)
-
-            for( let i in filterNames ) {
-                filterName = filterNames[i]
-                for( var j in filterUsers[filterName] ) {
-                    let user = filterUsers[filterName][j]
-                    setTimeout(function(){
-                        users[user].post('statuses/retweet/:id', {id: tweet.id_str}, function(err, data, response) {
-                            if (err) {
-                                console.error('Twitter error: ' + err.message)
-                                return false
-                            }
-                        });
-                    }, DELAYTIME)
-                }
-
-            }
-
-        }
-    })
-}
+        console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
+      } catch (error) {
+        console.error(`Unable to retweet ${tweet.id} in ${language}: ${error.message}`);
+      }
+    }
+  }
+})();

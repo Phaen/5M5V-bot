@@ -5,14 +5,13 @@
   "main": "5m5v-bot.js",
   "dependencies": {
     "js-yaml": "^3.13.1",
-    "twit": "^2.2.11"
+    "@jeto314/rettiwt-api": "1.0.0"
   },
   "devDependencies": {
-    "mocha": "^6.2.0"
+    "nodeunit": "^0.11.3"
   },
   "scripts": {
-    "test": "mocha",
-    "postinstall": "cp 5m5v-config.yaml.example $INIT_CWD"
+    "test": "nodeunit test"
   },
   "bin": {
     "5m5v-bot": "bin/5m5v-bot.js"
