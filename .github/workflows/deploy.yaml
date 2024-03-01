@@ -9,6 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  SERVICE_NAME: 5m5v-bot
   DEPLOY_HOST: 206.189.96.198
   DEPLOY_USER: deploy
 
@@ -45,36 +46,18 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Log stuff (temporary)
+      - name: Deploy bot to Docker droplet
         run: |
-          echo "${{ env.REGISTRY }}"
-          echo "${{ env.IMAGE_NAME }}"
-          echo "${{ steps.meta.outputs.tags }}"
-          echo "${{ steps.meta.outputs.labels }}"
-#
-#      - name: Deploy Metabase to docker droplet
-#        run: >
-#          eval `ssh-agent -s` &&
-#          ssh-add - <<< "${{ secrets.DEPLOY_PRIVATE_KEY }}" &&
-#          ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} -C
-#          "
-#          docker pull ${{ env.REGISTRY }}/${{ steps.meta.outputs.tags }} &&
-#          (docker stop ${SERVICE_NAME} && docker rm ${SERVICE_NAME} || true) &&
-#          docker run -d \
-#            -v \${HOME}/${SERVICE_NAME}:/metabase-data \
-#            -e 'MB_DB_FILE=/metabase-data/metabase.db' \
-#            --restart always \
-#            --label traefik.enable=true \
-#            --label traefik.http.middlewares.https-redirect.redirectscheme.scheme=https \
-#            --label traefik.http.middlewares.https-redirect.redirectscheme.permanent=true \
-#            --label traefik.http.routers.metabase-http.middlewares=https-redirect \
-#            --label traefik.http.routers.metabase-http.rule=Host\(\\\`metabase.veganhacktivists.org\\\`\) \
-#            --label traefik.http.routers.metabase-http.entrypoints=http \
-#            --label traefik.http.routers.metabase-https.rule=Host\(\\\`metabase.veganhacktivists.org\\\`\) \
-#            --label traefik.http.routers.metabase-https.tls.certresolver=le \
-#            --label traefik.http.routers.metabase-https.tls=true \
-#            --label traefik.http.routers.metabase-https.entrypoints=https \
-#            --network=traefik-public \
-#            --name ${SERVICE_NAME} \
-#            metabase/metabase:${METABASE_TAG}
-#          "
+          eval `ssh-agent -s`
+          ssh-add - <<< "${{ secrets.DEPLOY_PRIVATE_KEY }}"
+          ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} -C
+          "
+          echo "${{ secrets.BOT_CONFIG }}" > \${HOME}/${SERVICE_NAME}/5m5v-config.yaml
+          docker pull ${{ steps.meta.outputs.tags }} &&
+          docker rm -f ${SERVICE_NAME} &&
+          docker run -d \
+            -v \${HOME}/${SERVICE_NAME}/5m5v-config.yaml:/usr/src/app/5m5v-config.yaml \
+            --restart always \
+            --name ${SERVICE_NAME} \
+            ${{ steps.meta.outputs.tags }}
+          "
