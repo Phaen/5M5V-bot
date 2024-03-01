@@ -52,7 +52,8 @@ jobs:
           ssh-add - <<< "${{ secrets.DEPLOY_PRIVATE_KEY }}" &&
           ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} -C
           "
-          echo \"${{ secrets.BOT_CONFIG }}\" > \${HOME}/${SERVICE_NAME}/5m5v-config.yaml
+          mkdir -p \${HOME}/${SERVICE_NAME} &&
+          echo \"${{ secrets.BOT_CONFIG }}\" > \${HOME}/${SERVICE_NAME}/5m5v-config.yaml &&
           docker pull ${{ steps.meta.outputs.tags }} &&
           docker rm -f ${SERVICE_NAME} &&
           docker run -d \
