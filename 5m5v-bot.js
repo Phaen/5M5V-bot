@@ -13,12 +13,10 @@ try {
   throw `Unable to load config file: ${error.message}`;
 }
 
-process.exit();
-
 const languages = config.users.map(user => user.language);
 const pollingIntervalMs = 40 * 1000;
 const retweetDelayMs = config.delaytime || 2 * 60 * 1000;
-const isDryRun = process.argv[2] === '--dry-run';
+const isDryRun = true; //process.argv[2] === '--dry-run';
 
 const tweetFilter = new TweetFilter(config.exclude, languages);
 const rettiwt = new Rettiwt({ apiKey: config.users[0].api_key });
