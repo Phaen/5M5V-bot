@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - dockerize-and-deploy # FIXME: temporary
+      - master
   workflow_dispatch:
 
 env:
