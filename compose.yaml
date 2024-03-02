@@ -4,3 +4,4 @@ services:
       context: .
     volumes:
         - '.:/usr/src/app'
+    container_name: bot
