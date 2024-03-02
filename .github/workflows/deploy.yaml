@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  SERVICE_NAME: 5m5v-bot
+  DEPLOY_HOST: 206.189.96.198
+  DEPLOY_USER: deploy
+  CONFIG_FILE: 5m5v-config.yaml
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy bot to Docker droplet
+        run: >
+          eval `ssh-agent -s` &&
+          ssh-add - <<< "${{ secrets.DEPLOY_PRIVATE_KEY }}" &&
+          ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} -C
+          "
+          mkdir -p \${HOME}/${SERVICE_NAME} &&
+          echo \"${{ secrets.BOT_CONFIG }}\" > \${HOME}/${SERVICE_NAME}/${CONFIG_FILE} &&
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin &&
+          docker pull ${{ steps.meta.outputs.tags }} &&
+          docker rm -f ${SERVICE_NAME} &&
+          docker run -d \
+            -v \${HOME}/${SERVICE_NAME}/${CONFIG_FILE}:/usr/src/app/${CONFIG_FILE} \
+            --restart always \
+            --name ${SERVICE_NAME} \
+            ${{ steps.meta.outputs.tags }}
+          "
