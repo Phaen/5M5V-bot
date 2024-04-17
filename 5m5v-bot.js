@@ -51,6 +51,8 @@ async function getApiKey(user) {
               const rettiwt = new Rettiwt({ apiKey: await getApiKey(user) });
 
               await rettiwt.tweet.retweet(tweet.id);
+
+              console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
             } catch (error) {
               console.error(`Unable to retweet ${tweet.id} in ${language}: ${error.message}`);
 
@@ -59,8 +61,6 @@ async function getApiKey(user) {
               }
             }
           }
-
-          console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
         }
       }
     } catch (error) {
