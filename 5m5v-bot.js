@@ -44,21 +44,21 @@ async function getApiKey(user) {
         for (const language of matchingLanguages) {
           await new Promise(resolve => setTimeout(resolve, retweetDelayMs));
 
-          if (!isDryRun) {
-            const user = config.users.find(user => user.language === language);
+          const user = config.users.find(user => user.language === language);
 
-            try {
+          try {
+            if (!isDryRun) {
               const rettiwt = new Rettiwt({ apiKey: await getApiKey(user) });
 
               await rettiwt.tweet.retweet(tweet.id);
+            }
 
-              console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
-            } catch (error) {
-              console.error(`Unable to retweet ${tweet.id} in ${language}: ${error.message}`);
+            console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
+          } catch (error) {
+            console.error(`Unable to retweet ${tweet.id} in ${language}: ${error.message}`);
 
-              if (error.constructor.name === 'RettiwtError' && error.code === 32) {
-                user.apiKey = null;
-              }
+            if (error.constructor.name === 'RettiwtError' && error.code === 32) {
+              user.apiKey = null;
             }
           }
         }
