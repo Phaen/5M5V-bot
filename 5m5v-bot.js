@@ -25,7 +25,7 @@ async function getApiKey(user) {
 
     user.apiKey = await new Rettiwt().auth.login(user.email, user.username, user.password);
 
-    console.log(`Logged in as ${user.username} with API key ${user.apiKey}`);
+    console.log(`Logged in!`);
   }
 
   return user.apiKey;
