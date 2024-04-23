@@ -13,6 +13,14 @@ try {
   throw `Unable to load config file: ${error.message}`;
 }
 
+if (!('users' in (config ?? [])) || config.users.length === 0) {
+  throw 'No users defined in config file';
+}
+
+if (!config.users.every(user => ['language', 'email', 'username', 'password'].every(key => key in (user ?? [])))) {
+  throw 'At least one user is missing required fields in config file';
+}
+
 const languages = config.users.map(user => user.language);
 const pollingIntervalMs = 40 * 1000;
 const retweetDelayMs = config.delaytime || 2 * 60 * 1000;
