@@ -13,7 +13,7 @@ try {
   throw `Unable to load config file: ${error.message}`;
 }
 
-if (!('users' in (config ?? [])) || config.users.length === 0) {
+if ((config?.users || []).length === 0) {
   throw 'No users defined in config file';
 }
 
