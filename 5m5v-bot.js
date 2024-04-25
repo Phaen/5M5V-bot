@@ -28,23 +28,33 @@ const retweetDelayMs = config.delaytime || 2 * 60 * 1000;
 const isDryRun = process.argv[2] === '--dry-run';
 const tweetFilter = new TweetFilter(config.exclude, languages);
 
-async function getApiKey(user) {
-  if (!user.apiKey) {
-    console.log(`Logging in as ${user.username}...`);
-
-    await new Promise(resolve => setTimeout(resolve, loginDelayMs));
-
-    user.apiKey = await new Rettiwt().auth.login(user.email, user.username, user.password);
-
-    console.log('Logged in!');
+async function getApiKey(user, { retry = true } = {}) {
+  if (user.apiKey) {
+    return user.apiKey;
   }
 
-  return user.apiKey;
+  while (true) {
+    try {
+      console.log(`Logging in as ${user.username}...`);
+
+      await new Promise(resolve => setTimeout(resolve, loginDelayMs));
+
+      user.apiKey = await new Rettiwt().auth.login(user.email, user.username, user.password);
+
+      return user.apiKey;
+    } catch (e) {
+      console.error(`Unable to log in: ${e.message}`);
+
+      if (!retry) {
+        throw e;
+      }
+    }
+  }
 }
 
 (async () => {
   while (true) {
-    const rettiwt = new Rettiwt({ apiKey: await getApiKey(config.users[0]) });
+    const rettiwt = new Rettiwt({ apiKey: await getApiKey(config.users[0], { retry: true }) });
 
     console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
 
@@ -59,7 +69,7 @@ async function getApiKey(user) {
 
           try {
             if (!isDryRun) {
-              const rettiwt = new Rettiwt({ apiKey: await getApiKey(user) });
+              const rettiwt = new Rettiwt({ apiKey: await getApiKey(user, { retry: false }) });
 
               await rettiwt.tweet.retweet(tweet.id);
             }
