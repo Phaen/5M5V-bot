@@ -23,6 +23,7 @@ if (!config.users.every(user => ['language', 'email', 'username', 'password'].ev
 
 const languages = config.users.map(user => user.language);
 const pollingIntervalMs = 40 * 1000;
+const loginDelayMs = 5 * 60 * 1000;
 const retweetDelayMs = config.delaytime || 2 * 60 * 1000;
 const isDryRun = process.argv[2] === '--dry-run';
 const tweetFilter = new TweetFilter(config.exclude, languages);
@@ -30,6 +31,8 @@ const tweetFilter = new TweetFilter(config.exclude, languages);
 async function getApiKey(user) {
   if (!user.apiKey) {
     console.log(`Logging in as ${user.username}...`);
+
+    await new Promise(resolve => setTimeout(resolve, loginDelayMs));
 
     user.apiKey = await new Rettiwt().auth.login(user.email, user.username, user.password);
 
