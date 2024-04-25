@@ -41,6 +41,8 @@ async function getApiKey(user, { retry = true } = {}) {
 
       user.apiKey = await new Rettiwt().auth.login(user.email, user.username, user.password);
 
+      console.log('Logged in!');
+
       return user.apiKey;
     } catch (e) {
       console.error(`Unable to log in: ${e.message}`);
