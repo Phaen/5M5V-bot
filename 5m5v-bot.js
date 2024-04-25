@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const yaml = require('js-yaml');
-const { Rettiwt } = require('@jeto314/rettiwt-api');
+const { Rettiwt } = require('rettiwt-api');
 const TweetFilter = require('./lib/filter');
 const util = require('./lib/util');
 

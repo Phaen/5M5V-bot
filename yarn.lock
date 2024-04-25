@@ -105,18 +105,6 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
-"@jeto314/rettiwt-api@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@jeto314/rettiwt-api/-/rettiwt-api-1.0.0.tgz#bff3544713df4a5f1e4190ee7c8545ff80b81791"
-  integrity sha512-8efcjpB+wBXdOrWcBdz/m58LTYC8JQ5PQqPMGEoQ1z2CGNmr6YUP/+as8cauPHd131CdtIROzOtwhkg46mytNQ==
-  dependencies:
-    axios "1.6.3"
-    class-validator "0.14.1"
-    commander "11.1.0"
-    https-proxy-agent "7.0.2"
-    rettiwt-auth "2.1.0"
-    rettiwt-core "3.4.0-alpha.2"
-
 "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz#7e02e6eb5df901aaedb08514203b096614024098"
@@ -1318,6 +1306,18 @@ resolve@^1.10.0:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
+rettiwt-api@2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/rettiwt-api/-/rettiwt-api-2.7.1.tgz#8721606d08222d7034652782f7a09be53d28ad49"
+  integrity sha512-Q0757mFJTY70jFCFjLjzy1Dz/DIPR+HhnQaFBxz9HUZ4Dp9CStC/4OvEq6I3P8UlXTA3HVexTlevxRp9PHrnqw==
+  dependencies:
+    axios "1.6.3"
+    class-validator "0.14.1"
+    commander "11.1.0"
+    https-proxy-agent "7.0.2"
+    rettiwt-auth "2.1.0"
+    rettiwt-core "3.4.0"
+
 rettiwt-auth@2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.1.0.tgz#43fedd40cab5b775b92a1bef740d7b2a36553463"
@@ -1328,10 +1328,10 @@ rettiwt-auth@2.1.0:
     cookiejar "2.1.4"
     https-proxy-agent "7.0.2"
 
-rettiwt-core@3.4.0-alpha.2:
-  version "3.4.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.4.0-alpha.2.tgz#d3033d0db7a05f503e3b0aef5981d33897f0d08b"
-  integrity sha512-775cDTPWZXhY+znEOsjupIgj/Mmi8shKhLveShm1KnXEX1Qc5SjTEnpQv1dHmDaxiV9n6BIQ73E7K9AucBl+Mg==
+rettiwt-core@3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.4.0.tgz#515aa168a5a64effa6cb2340debafebf5d4ee8a1"
+  integrity sha512-7N2wV+AB5fJVMzyE0s6FS9jZ/4z/eXIM1DlhOqeWous36PZSDPprINIcdPM8LVmfMEpq4aanplHkqCheNGLXBw==
   dependencies:
     axios "1.6.3"
     class-validator "0.14.1"
