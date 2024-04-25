@@ -28,10 +28,14 @@ The configuration is loaded from `5m5v-config.yaml` in the working directory, wh
 
 #### `users`
 A list containing all users to retweet with. The first user listed will be used to search tweets with.
-#### `users.api_key`
-To obtain the API key for a given Twitter user, follow the [instructions from the Rettiwt-API package](https://github.com/Rishikant181/Rettiwt-API#authentication).
 #### `users.language`
 The language that this user will be retweeting matches from.
+#### `users.username`
+The Twitter username of that user (without the @).
+#### `users.email`
+The email address of the Twitter account.
+#### `users.password`
+The password of the Twitter account.
 #### `exclude` *(optional)*
 A list of keywords that if found in a Tweet will exclude that Tweet from being retweeted.
 #### `delaytime` *(optional)*

@@ -5,7 +5,7 @@
   "main": "5m5v-bot.js",
   "dependencies": {
     "js-yaml": "^3.13.1",
-    "@jeto314/rettiwt-api": "1.0.0"
+    "rettiwt-api": "2.7.1"
   },
   "devDependencies": {
     "nodeunit": "^0.11.3"

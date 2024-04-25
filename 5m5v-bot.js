@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const yaml = require('js-yaml');
-const { Rettiwt } = require('@jeto314/rettiwt-api');
+const { Rettiwt } = require('rettiwt-api');
 const TweetFilter = require('./lib/filter');
 const util = require('./lib/util');
 
@@ -13,34 +13,69 @@ try {
   throw `Unable to load config file: ${error.message}`;
 }
 
+if ((config?.users || []).length === 0) {
+  throw 'No users defined in config file';
+}
+
+if (!config.users.every(user => ['language', 'email', 'username', 'password'].every(key => key in (user ?? [])))) {
+  throw 'At least one user is missing required fields in config file';
+}
+
 const languages = config.users.map(user => user.language);
 const pollingIntervalMs = 40 * 1000;
 const retweetDelayMs = config.delaytime || 2 * 60 * 1000;
 const isDryRun = process.argv[2] === '--dry-run';
-
 const tweetFilter = new TweetFilter(config.exclude, languages);
-const rettiwt = new Rettiwt({ apiKey: config.users[0].api_key });
 
-console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
+async function getApiKey(user) {
+  if (!user.apiKey) {
+    console.log(`Logging in as ${user.username}...`);
+
+    user.apiKey = await new Rettiwt().auth.login(user.email, user.username, user.password);
+
+    console.log('Logged in!');
+  }
+
+  return user.apiKey;
+}
 
 (async () => {
-  for await (const tweet of rettiwt.tweet.stream({ includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')] }, pollingIntervalMs)) {
-    const matchingLanguages = tweetFilter.matches(tweet) || [];
+  while (true) {
+    const rettiwt = new Rettiwt({ apiKey: await getApiKey(config.users[0]) });
 
-    for (const language of matchingLanguages) {
-      await new Promise(resolve => setTimeout(resolve, retweetDelayMs));
+    console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
 
-      try {
-        if (!isDryRun) {
-          const apiKey = config.users.find(user => user.language === language)?.api_key ?? null;
-          const rettiwt = new Rettiwt({ apiKey });
+    try {
+      for await (const tweet of rettiwt.tweet.stream({ includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')] }, pollingIntervalMs)) {
+        const matchingLanguages = tweetFilter.matches(tweet) || [];
 
-          await rettiwt.tweet.retweet(tweet.id);
+        for (const language of matchingLanguages) {
+          await new Promise(resolve => setTimeout(resolve, retweetDelayMs));
+
+          const user = config.users.find(user => user.language === language);
+
+          try {
+            if (!isDryRun) {
+              const rettiwt = new Rettiwt({ apiKey: await getApiKey(user) });
+
+              await rettiwt.tweet.retweet(tweet.id);
+            }
+
+            console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
+          } catch (error) {
+            console.error(`Unable to retweet ${tweet.id} in ${language}: ${error.message}`);
+
+            if (error.constructor.name === 'RettiwtError' && error.code === 32) {
+              user.apiKey = null;
+            }
+          }
         }
+      }
+    } catch (error) {
+      console.error(`Error while streaming tweets: ${error.message}`);
 
-        console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
-      } catch (error) {
-        console.error(`Unable to retweet ${tweet.id} in ${language}: ${error.message}`);
+      if (error.constructor.name === 'RettiwtError' && error.code === 32) {
+        config.users[0].apiKey = null;
       }
     }
   }
