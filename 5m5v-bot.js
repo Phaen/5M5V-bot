@@ -86,15 +86,16 @@ function buildTweetPayload(tweet) {
         const matchingLanguages = tweetFilter.matches(tweet) || [];
 
         for (const language of matchingLanguages) {
-          const lang = languageKeys[language];
-
           try {
             if (!isDryRun) {
-              await axios.post(process.env.TWEETS_API_ENDPOINT, { lang, tweets: [buildTweetPayload(tweet)] }, {
+              await axios.post(process.env.TWEETS_API_ENDPOINT, {
+                lang: languageKeys[language],
+                tweets: [buildTweetPayload(tweet)],
+              }, {
                 headers: {
                   'X-API-KEY': process.env.TWEETS_API_KEY,
                 },
-              });
+             });
             }
 
             console.log(`Sent tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
