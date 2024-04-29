@@ -4,7 +4,8 @@
   "description": "Twitter Bot That Retweets People Who Are Considering Veganism",
   "main": "5m5v-bot.js",
   "dependencies": {
-    "js-yaml": "^3.13.1",
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
     "rettiwt-api": "2.7.1"
   },
   "devDependencies": {

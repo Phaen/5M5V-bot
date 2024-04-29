@@ -1,5 +1,0 @@
-users:
-  - language: 'english'
-    username: 'user1'
-    email: 'user1@domain.com'
-    password: 'password123#@!'
