@@ -32,6 +32,45 @@ const streamFilter = {
   includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')],
 };
 
+(async () => {
+  while (true) {
+    const rettiwt = new Rettiwt({ apiKey: await login() });
+
+    console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
+
+    try {
+      for await (const tweet of rettiwt.tweet.stream(streamFilter, pollingIntervalMs)) {
+        const matchingLanguages = tweetFilter.matches(tweet) || [];
+
+        for (const language of matchingLanguages) {
+          try {
+            if (!isDryRun) {
+              await axios.post(process.env.TWEETS_API_ENDPOINT, {
+                lang: languageKeys[language],
+                tweets: [buildTweetPayload(tweet)],
+              }, {
+                headers: {
+                  'X-API-KEY': process.env.TWEETS_API_KEY,
+                },
+             });
+            }
+
+            console.log(`Sent tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
+          } catch (error) {
+            console.error(`Unable to send tweet ${tweet.id} in ${language}: ${error.message}`);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Error while streaming tweets: ${error.message}`);
+
+      if (error.constructor.name === 'RettiwtError' && error.code === 32) {
+        await login();
+      }
+    }
+  }
+})();
+
 async function login() {
   while (true) {
     try {
@@ -74,42 +113,3 @@ function buildTweetPayload(tweet) {
     media: (tweet.media ?? []).map(media => ({ ...media })),
   };
 }
-
-(async () => {
-  while (true) {
-    const rettiwt = new Rettiwt({ apiKey: await login() });
-
-    console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
-
-    try {
-      for await (const tweet of rettiwt.tweet.stream(streamFilter, pollingIntervalMs)) {
-        const matchingLanguages = tweetFilter.matches(tweet) || [];
-
-        for (const language of matchingLanguages) {
-          try {
-            if (!isDryRun) {
-              await axios.post(process.env.TWEETS_API_ENDPOINT, {
-                lang: languageKeys[language],
-                tweets: [buildTweetPayload(tweet)],
-              }, {
-                headers: {
-                  'X-API-KEY': process.env.TWEETS_API_KEY,
-                },
-             });
-            }
-
-            console.log(`Sent tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
-          } catch (error) {
-            console.error(`Unable to send tweet ${tweet.id} in ${language}: ${error.message}`);
-          }
-        }
-      }
-    } catch (error) {
-      console.error(`Error while streaming tweets: ${error.message}`);
-
-      if (error.constructor.name === 'RettiwtError' && error.code === 32) {
-        await login();
-      }
-    }
-  }
-})();
