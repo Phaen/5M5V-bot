@@ -36,9 +36,13 @@ const streamFilter = {
   includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')],
 };
 
+let twitterApiKey = null;
+
 (async () => {
+  twitterApiKey = await loginToTwitter();
+
   while (true) {
-    const rettiwt = new Rettiwt({ apiKey: await login() });
+    const rettiwt = new Rettiwt({ apiKey: twitterApiKey });
 
     console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
 
@@ -69,13 +73,13 @@ const streamFilter = {
       console.error(`Error while streaming tweets: ${error.message}`);
 
       if (error.constructor.name === 'RettiwtError' && error.code === 32) {
-        await login();
+        twitterApiKey = await loginToTwitter();
       }
     }
   }
 })();
 
-async function login() {
+async function loginToTwitter() {
   while (true) {
     try {
       console.log('Logging in...');
