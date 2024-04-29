@@ -35,7 +35,7 @@ const streamFilter = {
 async function login() {
   while (true) {
     try {
-      console.log(`Logging in...`);
+      console.log('Logging in...');
 
       const apiKey = await new Rettiwt().auth.login(
         process.env.TWITTER_EMAIL,
