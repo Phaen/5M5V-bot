@@ -10,7 +10,7 @@
 **/.github
 **/.gitignore
 .idea
-5m5v-config.yaml*
+.env*
 compose.yaml
 Dockerfile
 LICENSE

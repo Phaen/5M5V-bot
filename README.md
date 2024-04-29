@@ -24,22 +24,18 @@ This bot tracks usage of the term "vegan" - and its translated variants dependin
 
 ## Configuration
 
-The configuration is loaded from `5m5v-config.yaml` in the working directory, which is likely either the directory of your cloned repository or the directory of your project where you installed the node package. The configuration format is YAML, with its options listed below.
+The configuration is loaded from the `.env` file in the root of the project. The following keys are required:
 
-#### `users`
-A list containing all users to retweet with. The first user listed will be used to search tweets with.
-#### `users.language`
-The language that this user will be retweeting matches from.
-#### `users.username`
-The Twitter username of that user (without the @).
-#### `users.email`
-The email address of the Twitter account.
-#### `users.password`
-The password of the Twitter account.
-#### `exclude` *(optional)*
-A list of keywords that if found in a Tweet will exclude that Tweet from being retweeted.
-#### `delaytime` *(optional)*
-The time to delay retweets with once a matching Tweet has been found. Defaults to two minutes.
+#### `TWEETS_API_ENDPOINT`
+The endpoint of the 5M5V API that will receive the tweets.
+#### `TWEETS_API_KEY`
+The API key of the 5M5V API that will receive the tweets.
+#### `TWITTER_EMAIL`
+The email address of the Twitter account that the bot will use to stream tweets.
+#### `TWITTER_USERNAME`
+The username of the Twitter account that the bot will use to stream tweets.
+#### `TWITTER_PASSWORD`
+The password of the Twitter account that the bot will use to stream tweets.
 
 ## Running the tests
 

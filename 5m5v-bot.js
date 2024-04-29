@@ -1,88 +1,105 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const yaml = require('js-yaml');
+require('dotenv').config();
+
+['TWEETS_API_ENDPOINT', 'TWEETS_API_KEY', 'TWITTER_EMAIL', 'TWITTER_USERNAME', 'TWITTER_PASSWORD'].forEach(key => {
+  if (!process.env[key]) {
+    console.error(`Environment variable ${key} is not set (or empty). Exiting.`);
+    process.exit(1);
+  }
+});
+
 const { Rettiwt } = require('rettiwt-api');
+const axios = require('axios');
+
 const TweetFilter = require('./lib/filter');
 const util = require('./lib/util');
 
-let config = {};
-try {
-  config = yaml.safeLoad(fs.readFileSync('5m5v-config.yaml', 'utf8'));
-} catch (error) {
-  throw `Unable to load config file: ${error.message}`;
-}
-
-if ((config?.users || []).length === 0) {
-  throw 'No users defined in config file';
-}
-
-if (!config.users.every(user => ['language', 'email', 'username', 'password'].every(key => key in (user ?? [])))) {
-  throw 'At least one user is missing required fields in config file';
-}
-
-const languages = config.users.map(user => user.language);
 const pollingIntervalMs = 40 * 1000;
-const loginDelayMs = 5 * 60 * 1000;
-const retweetDelayMs = config.delaytime || 2 * 60 * 1000;
+const retryLoginDelayMs = 5 * 60 * 1000;
 const isDryRun = process.argv[2] === '--dry-run';
-const tweetFilter = new TweetFilter(config.exclude, languages);
 
-async function getApiKey(user, { retry = true } = {}) {
-  if (user.apiKey) {
-    return user.apiKey;
-  }
+const languageKeys = {
+  english: 'en',
+  french: 'fr',
+  spanish: 'es',
+  german: 'de',
+};
 
+const tweetFilter = new TweetFilter([], Object.keys(languageKeys));
+
+const streamFilter = {
+  includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')],
+};
+
+async function login() {
   while (true) {
     try {
-      console.log(`Logging in as ${user.username}...`);
+      console.log(`Logging in...`);
 
-      await new Promise(resolve => setTimeout(resolve, loginDelayMs));
+      const apiKey = await new Rettiwt().auth.login(
+        process.env.TWITTER_EMAIL,
+        process.env.TWITTER_USERNAME,
+        process.env.TWITTER_PASSWORD,
+      );
 
-      user.apiKey = await new Rettiwt().auth.login(user.email, user.username, user.password);
+      if (!apiKey) {
+        throw new Error('No API key returned');
+      }
 
       console.log('Logged in!');
 
-      return user.apiKey;
+      return apiKey;
     } catch (e) {
       console.error(`Unable to log in: ${e.message}`);
 
-      if (!retry) {
-        throw e;
-      }
+      await new Promise(resolve => setTimeout(resolve, retryLoginDelayMs));
     }
   }
 }
 
+function buildTweetPayload(tweet) {
+  return {
+    id: tweet.id,
+    date: tweet.createdAt,
+    text: tweet.fullText,
+    from_user_name: tweet.tweetBy.fullName,
+    from_full_name: tweet.tweetBy.fullName,
+    from_profile_image: tweet.tweetBy.profileImage,
+    view_count: ~~tweet.viewCount,
+    like_count: ~~tweet.likeCount,
+    reply_count: ~~tweet.replyCount,
+    retweet_count: ~~tweet.retweetCount,
+    quote_count: ~~tweet.quoteCount,
+    media: (tweet.media ?? []).map(media => ({ ...media })),
+  };
+}
+
 (async () => {
   while (true) {
-    const rettiwt = new Rettiwt({ apiKey: await getApiKey(config.users[0], { retry: true }) });
+    const rettiwt = new Rettiwt({ apiKey: await login() });
 
     console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
 
     try {
-      for await (const tweet of rettiwt.tweet.stream({ includeWords: [util.trackedTerms.map(term => `"${term}"`).join(' OR ')] }, pollingIntervalMs)) {
+      for await (const tweet of rettiwt.tweet.stream(streamFilter, pollingIntervalMs)) {
         const matchingLanguages = tweetFilter.matches(tweet) || [];
 
         for (const language of matchingLanguages) {
-          await new Promise(resolve => setTimeout(resolve, retweetDelayMs));
-
-          const user = config.users.find(user => user.language === language);
+          const lang = languageKeys[language];
 
           try {
             if (!isDryRun) {
-              const rettiwt = new Rettiwt({ apiKey: await getApiKey(user, { retry: false }) });
-
-              await rettiwt.tweet.retweet(tweet.id);
+              await axios.post(process.env.TWEETS_API_ENDPOINT, { lang, tweets: [buildTweetPayload(tweet)] }, {
+                headers: {
+                  'X-API-KEY': process.env.TWEETS_API_KEY,
+                },
+              });
             }
 
-            console.log(`Retweeted tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
+            console.log(`Sent tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
           } catch (error) {
-            console.error(`Unable to retweet ${tweet.id} in ${language}: ${error.message}`);
-
-            if (error.constructor.name === 'RettiwtError' && error.code === 32) {
-              user.apiKey = null;
-            }
+            console.error(`Unable to send tweet ${tweet.id} in ${language}: ${error.message}`);
           }
         }
       }
@@ -90,7 +107,7 @@ async function getApiKey(user, { retry = true } = {}) {
       console.error(`Error while streaming tweets: ${error.message}`);
 
       if (error.constructor.name === 'RettiwtError' && error.code === 32) {
-        config.users[0].apiKey = null;
+        await login();
       }
     }
   }
