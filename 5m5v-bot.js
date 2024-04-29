@@ -2,12 +2,16 @@
 
 require('dotenv').config();
 
-['TWEETS_API_ENDPOINT', 'TWEETS_API_KEY', 'TWITTER_EMAIL', 'TWITTER_USERNAME', 'TWITTER_PASSWORD'].forEach(key => {
-  if (!process.env[key]) {
-    console.error(`Environment variable ${key} is not set (or empty). Exiting.`);
-    process.exit(1);
-  }
-});
+if ([
+  'TWEETS_API_ENDPOINT',
+  'TWEETS_API_KEY',
+  'TWITTER_EMAIL',
+  'TWITTER_USERNAME',
+  'TWITTER_PASSWORD',
+].some(key => !process.env[key])) {
+  console.error('One or more required environment variables are missing. Exiting.');
+  process.exit(1);
+}
 
 const { Rettiwt } = require('rettiwt-api');
 const axios = require('axios');
