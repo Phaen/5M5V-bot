@@ -45,11 +45,14 @@ let twitterApiKey = null;
     const rettiwt = new Rettiwt({ apiKey: twitterApiKey });
 
     console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
+    console.log('Search filter:', streamFilter);
 
     try {
       for await (const tweet of rettiwt.tweet.stream(streamFilter, pollingIntervalMs)) {
         const matchingLanguages = tweetFilter.matches(tweet) || [];
 
+        console.log('Found tweet, matching languages:', matchingLanguages);
+        
         for (const language of matchingLanguages) {
           try {
             if (!isDryRun) {
