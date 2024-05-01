@@ -54,8 +54,8 @@ let twitterApiKey = null;
       for await (const tweet of rettiwt.tweet.stream(streamFilter, pollingIntervalMs)) {
         const matchingLanguages = tweetFilter.matches(tweet) || [];
 
-        console.log('Found tweet, matching languages:', matchingLanguages);
-        
+        console.log('Found tweet', tweet.id, tweet.fullText, matchingLanguages);
+
         for (const language of matchingLanguages) {
           try {
             if (!isDryRun) {
