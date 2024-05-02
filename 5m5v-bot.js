@@ -19,7 +19,7 @@ const axios = require('axios');
 const TweetFilter = require('./lib/filter');
 const util = require('./lib/util');
 
-const pollingIntervalMs = 29 * 60 * 1000;
+const pollingIntervalMs = 21 * 60 * 1000;
 const retryLoginDelayMs = 5 * 60 * 1000;
 const isDryRun = process.argv[2] === '--dry-run';
 
