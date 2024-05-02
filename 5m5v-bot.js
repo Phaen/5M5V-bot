@@ -35,7 +35,7 @@ const tweetFilter = new TweetFilter([], Object.keys(languageKeys));
 const streamFilter = {
   includeWords: [
     util.trackedTerms.map(term => `"${term}"`).join(' OR '),
-    '"want" OR "would like" OR "thinking of" OR "should try" OR "planning on" OR "souhaite" OR "veux" OR "ai envie de" OR "aspire à" OR "espère" OR "quiero" OR "deseo" OR "tengo ganas de" OR "aspiro a" OR "will" OR "möchte" OR "begehre" OR "verlange" OR "sehne mich nach" OR "erwünsche"',
+    '"want to" OR "would like" OR "thinking of" OR "should try" OR "planning on" OR "souhaite" OR "veux" OR "ai envie de" OR "aspire à" OR "espère" OR "quiero" OR "deseo" OR "tengo ganas de" OR "aspiro a" OR "will" OR "möchte" OR "begehre" OR "verlange" OR "sehne mich nach" OR "erwünsche"',
   ],
 };
 
