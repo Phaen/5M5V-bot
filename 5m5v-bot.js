@@ -3,20 +3,22 @@
 require('dotenv').config();
 
 if ([
-  'TWEETS_API_ENDPOINT',
-  'TWEETS_API_KEY',
   'TWITTER_EMAIL',
   'TWITTER_USERNAME',
   'TWITTER_PASSWORD',
+  'TWEETS_API_ENDPOINT',
+  'TWEETS_API_KEY',
+  'OPENAI_API_KEY',
 ].some(key => !process.env[key])) {
   console.error('One or more required environment variables are missing. Exiting.');
   process.exit(1);
 }
 
 const { Rettiwt } = require('rettiwt-api');
+const { OpenAI } = require('openai');
 const axios = require('axios');
 
-const TweetFilter = require('./lib/filter');
+const getAiPrompt = require('./data/prompt');
 const util = require('./lib/util');
 
 const pollingIntervalMs = 21 * 60 * 1000;
@@ -30,14 +32,14 @@ const languageKeys = {
   german: 'de',
 };
 
-const tweetFilter = new TweetFilter([], Object.keys(languageKeys));
-
 const streamFilter = {
   includeWords: [
-    util.trackedTerms.map(term => `"${term}"`).join(' OR '),
-    '"want to" OR "would like" OR "thinking of" OR "should try" OR "planning on" OR "souhaite" OR "veux" OR "ai envie de" OR "aspire à" OR "espère" OR "quiero" OR "deseo" OR "tengo ganas de" OR "aspiro a" OR "will" OR "möchte" OR "begehre" OR "verlange" OR "sehne mich nach" OR "erwünsche"',
+    '"vegan" OR "végétalien" OR "végétalienne" OR "végane" OR "vegano" OR "vegana"',
+    '"I want to" OR "I would like" OR "thinking of" OR "I should try" OR "planning on" OR "I wish" OR "Je souhaite" OR "Je veux" OR "J\'ai envie de" OR "J\'espère" OR "Quiero" OR "Deseo" OR "Tengo ganas de" OR "Estoy pensando en" OR "He decidido" OR "Planeo" OR "Me estoy planteando" OR "Voy a" OR "Mi intención es" OR "Ich will" OR "Ich möchte" OR "Ich beabsichtige" OR "Ich habe vor"',
   ],
 };
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 let twitterApiKey = null;
 
@@ -52,27 +54,29 @@ let twitterApiKey = null;
 
     try {
       for await (const tweet of rettiwt.tweet.stream(streamFilter, pollingIntervalMs)) {
-        const matchingLanguages = tweetFilter.matches(tweet) || [];
+        const lang = await findMatchingLanguageKey(tweet.fullText);
 
-        console.log('Found tweet', tweet.id, tweet.fullText, matchingLanguages);
+        if (lang === null) {
+          continue;
+        }
 
-        for (const language of matchingLanguages) {
-          try {
-            if (!isDryRun) {
-              await axios.post(process.env.TWEETS_API_ENDPOINT, {
-                lang: languageKeys[language],
-                tweets: [buildTweetPayload(tweet)],
-              }, {
-                headers: {
-                  'X-API-KEY': process.env.TWEETS_API_KEY,
-                },
-             });
-            }
+        console.log('Found tweet', tweet.id, tweet.fullText, lang);
 
-            console.log(`Sent tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
-          } catch (error) {
-            console.error(`Unable to send tweet ${tweet.id} in ${language}: ${error.message}`);
+        try {
+          if (!isDryRun) {
+            await axios.post(process.env.TWEETS_API_ENDPOINT, {
+              lang,
+              tweets: [buildTweetPayload(tweet)],
+            }, {
+              headers: {
+                'X-API-KEY': process.env.TWEETS_API_KEY,
+              },
+           });
           }
+
+          console.log(`Sent tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
+        } catch (error) {
+          console.error(`Unable to send tweet ${tweet.id} in ${language}: ${error.message}`);
         }
       }
     } catch (error) {
@@ -109,6 +113,17 @@ async function loginToTwitter() {
       await new Promise(resolve => setTimeout(resolve, retryLoginDelayMs));
     }
   }
+}
+
+async function findMatchingLanguageKey(tweetText) {
+  const completion = await openai.chat.completions.create({
+    messages: [{ role: 'user', content: getAiPrompt(tweetText) }],
+    model: 'gpt-3.5-turbo',
+  });
+
+  const response = completion.choices[0].message.content.trim();
+
+  return ['en', 'fr', 'es', 'de'].includes(response) ? response : null;
 }
 
 function buildTweetPayload(tweet) {
