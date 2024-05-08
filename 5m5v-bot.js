@@ -131,7 +131,7 @@ function buildTweetPayload(tweet) {
     id: tweet.id,
     date: tweet.createdAt,
     text: tweet.fullText,
-    from_user_name: tweet.tweetBy.fullName,
+    from_user_name: tweet.tweetBy.userName,
     from_full_name: tweet.tweetBy.fullName,
     from_profile_image: tweet.tweetBy.profileImage,
     view_count: ~~tweet.viewCount,
