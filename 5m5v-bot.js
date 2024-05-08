@@ -74,9 +74,9 @@ let twitterApiKey = null;
            });
           }
 
-          console.log(`Sent tweet ${tweet.id} in ${language}:\n${tweet.fullText}`);
+          console.log(`Sent tweet ${tweet.id} in ${lang}:\n${tweet.fullText}`);
         } catch (error) {
-          console.error(`Unable to send tweet ${tweet.id} in ${language}: ${error.message}`);
+          console.error(`Unable to send tweet ${tweet.id} in ${lang}: ${error.message}`);
         }
       }
     } catch (error) {
