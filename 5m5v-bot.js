@@ -33,7 +33,7 @@ const tweetFilter = new TweetFilter([], Object.keys(languageKeys));
 const streamFilter = {
   includeWords: [
     '"vegan" OR "végétalien" OR "végétalienne" OR "végane" OR "vegano" OR "vegana"',
-    '"I want to" OR "I would like" OR "thinking of" OR "I should try" OR "plan on" OR "planning on" OR "I wish" OR "Je souhaite" OR "Je veux" OR "J\'ai envie de" OR "J\'espère" OR "Quiero" OR "Deseo" OR "Estoy pensando en" OR "Voy a" OR "Ich will" OR "Ich möchte" OR "Ich beabsichtige" OR "Ich habe vor"',
+    '"I want to" OR "I would like" OR "thinking of" OR "I should try" OR "plan on" OR "I wish" OR "devenir" OR "je veux" OR "j\'ai envie" OR "je voudrais" OR "j\'aimerais" OR "Quiero" OR "Deseo" OR "Estoy pensando en" OR "Voy a" OR "Ich will" OR "Ich möchte" OR "Ich beabsichtige" OR "Ich habe vor"',
   ],
 };
 
