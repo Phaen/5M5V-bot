@@ -91,6 +91,10 @@ async function loginToTwitter() {
     try {
       console.log('Logging in...');
 
+      console.log(process.env.TWITTER_EMAIL,
+        process.env.TWITTER_USERNAME,
+        process.env.TWITTER_PASSWORD);
+
       const apiKey = await new Rettiwt().auth.login(
         process.env.TWITTER_EMAIL,
         process.env.TWITTER_USERNAME,
