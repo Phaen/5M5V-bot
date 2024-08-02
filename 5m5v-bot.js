@@ -2,6 +2,9 @@
 
 require('dotenv').config();
 
+console.log(process.env.TWITTER_EMAIL);
+console.log(process.env);
+
 if ([
   'TWITTER_EMAIL',
   'TWITTER_USERNAME',
