@@ -39,12 +39,7 @@ const streamFilter = {
   while (true) {
     const rettiwt = new Rettiwt({ apiKey: process.env.TWITTER_API_KEY });
 
-    rettiwt.tweet.details('1819224230505877641').then(tweet => {
-      console.log(tweet);
-    });
-
     console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
-    console.log('Search filter:', streamFilter);
 
     try {
       for await (const tweet of rettiwt.tweet.stream(streamFilter, pollingIntervalMs)) {
