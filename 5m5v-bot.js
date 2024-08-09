@@ -3,9 +3,7 @@
 require('dotenv').config();
 
 if ([
-  'TWITTER_EMAIL',
-  'TWITTER_USERNAME',
-  'TWITTER_PASSWORD',
+  'TWITTER_API_KEY',
   'TWEETS_API_ENDPOINT',
   'TWEETS_API_KEY',
 ].some(key => !process.env[key])) {
@@ -18,7 +16,7 @@ const axios = require('axios');
 const TweetFilter = require('./lib/filter');
 
 const pollingIntervalMs = 21 * 60 * 1000;
-const retryLoginDelayMs = 5 * 60 * 1000;
+const retryDelayAfterErrorMs = 5 * 60 * 1000;
 const isDryRun = process.argv[2] === '--dry-run';
 
 const languageKeys = {
@@ -37,16 +35,11 @@ const streamFilter = {
   ],
 };
 
-let twitterApiKey = null;
-
 (async () => {
-  twitterApiKey = await loginToTwitter();
-
   while (true) {
-    const rettiwt = new Rettiwt({ apiKey: twitterApiKey });
+    const rettiwt = new Rettiwt({ apiKey: process.env.TWITTER_API_KEY });
 
     console.log(isDryRun ? 'Looking for new tweets (dry run)...' : 'Looking for new tweets...');
-    console.log('Search filter:', streamFilter);
 
     try {
       for await (const tweet of rettiwt.tweet.stream(streamFilter, pollingIntervalMs)) {
@@ -76,38 +69,10 @@ let twitterApiKey = null;
     } catch (error) {
       console.error(`Error while streaming tweets: ${error.message}`);
 
-      if (error.constructor.name === 'RettiwtError' && error.code === 32) {
-        twitterApiKey = await loginToTwitter();
-      }
+      await new Promise(resolve => setTimeout(resolve, retryDelayAfterErrorMs));
     }
   }
 })();
-
-async function loginToTwitter() {
-  while (true) {
-    try {
-      console.log('Logging in...');
-
-      const apiKey = await new Rettiwt().auth.login(
-        process.env.TWITTER_EMAIL,
-        process.env.TWITTER_USERNAME,
-        process.env.TWITTER_PASSWORD,
-      );
-
-      if (!apiKey) {
-        throw new Error('No API key returned');
-      }
-
-      console.log('Logged in!');
-
-      return apiKey;
-    } catch (e) {
-      console.error(`Unable to log in: ${e.message}`);
-
-      await new Promise(resolve => setTimeout(resolve, retryLoginDelayMs));
-    }
-  }
-}
 
 function buildTweetPayload(tweet) {
   return {
